@@ -2,6 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-  path("<int:id>", views.index, name="index"),
-  path("", views.home, name="home"),
+    path('', views.main_page, name='main_page'),
+    path('api/receive-distance/', views.receive_distance_data, name='receive_distance_data'),
 ]
