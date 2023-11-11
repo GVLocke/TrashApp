@@ -11,7 +11,7 @@ def read_distance():
     distance_value = None
     try:
         ser.write(b'M')
-        ser.flushInput()
+        ser.reset_input_buffer()
         ser.readline()
 
         distance_str = ser.readline().decode('utf-8').strip()
@@ -30,7 +30,7 @@ if __name__ == "__main__":
             serial_data = read_distance()
             time.sleep(1)
             if serial_data is not None:
-                response = requests.post(URL, data={'serial_data' : serial_data, 'trash_can': 'Trash Can 1'})
+                response = requests.post(URL, data={'serial_data' : serial_data, 'trash_can': 'Trash Can 3'})
 
     except KeyboardInterrupt:
         print("Exiting...")

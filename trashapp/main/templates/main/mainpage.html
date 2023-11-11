@@ -5,26 +5,34 @@
     <title>Main Page</title>
 </head>
 <body>
-    <h1>Latest Distance Measurement</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Distance</th>
-                <th>Timestamp</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if latest_measurement %}
+    <h1>Latest Distance Measurements</h1>
+    <form action="{% url 'create_trash_can' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Enter trash can name">
+        <input type="submit" value="Create Trash Can">
+    </form>
+    {% for trash_can in trash_cans %}
+        <h2>{{ trash_can.name }}</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ latest_measurement.distance }}</td>
-                    <td>{{ latest_measurement.created_at }}</td>
+                    <th>Distance</th>
+                    <th>Timestamp</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="2">No measurements available</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% if trash_can.distancemeasurement_set.last %}
+                    <tr>
+                        <td>{{ trash_can.distancemeasurement_set.last.distance }}</td>
+                        <td>{{ trash_can.distancemeasurement_set.last.created_at }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">No measurements available</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    {% endfor %}
 </body>
 </html>
