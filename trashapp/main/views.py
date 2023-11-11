@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.urls import resolve
 from django.views.decorators.http import require_POST
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import DistanceMeasurement, TrashCan
 
 from django.http import JsonResponse
@@ -14,6 +15,16 @@ def create_trash_can(request):
     return redirect('main_page')
 
 from django.views.decorators.http import require_POST
+
+
+def delete_trash_can(request, trash_can_id):
+    trash_can = get_object_or_404(TrashCan, pk=trash_can_id)
+
+    if request.method == 'POST':
+        trash_can.delete()
+        return redirect('main_page')  # Redirect to the appropriate view after deletion
+
+    return render(request, 'main/delete_trash_can.html', {'trash_can': trash_can})
 
 @require_POST
 @csrf_exempt
@@ -40,4 +51,6 @@ def receive_distance_data(request):
 def main_page(request):
     trash_cans = TrashCan.objects.all()
     context = {'trash_cans': trash_cans}
+    current_url = resolve(request.path_info).url_name
+    print(current_url)
     return render(request, 'main/mainpage.html', context)
