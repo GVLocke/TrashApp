@@ -30,7 +30,7 @@ if __name__ == "__main__":
             serial_data = read_distance()
             time.sleep(1)
             if serial_data is not None:
-                response = requests.post(URL, data={'serial_data' : serial_data, 'trash_can': 'Trash Can 3'})
+                response = requests.post(URL, data={'serial_data' : serial_data, 'trash_can': 'Trash Can 1'})
 
     except KeyboardInterrupt:
         print("Exiting...")
