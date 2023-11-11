@@ -3,6 +3,59 @@
 <html>
 <head>
     <title>Main Page</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif; /* Change the font-family to Georgia */
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-family: Courier New, monospace;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .trash-can-icon {
+            font-size: 48px;
+            color: #333;
+        }
+
+        /* New style for the warning message */
+        .warning-message {
+            color: #ff0000; /* Red color for warning */
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Latest Distance Measurements</h1>
@@ -21,7 +74,46 @@
                 </tr>
             </thead>
             <tbody>
-                {% if trash_can.distancemeasurement_set.last %}
+                <div class="container">
+        <h1>Trash Can Monitor</h1>
+        <i class="trash-can-icon">&#128465;</i>
+        <div class="progress-bar">
+            <div class="progress" id ="progress-bar" style="width: percent%;"></div>
+        </div>
+        <p id = "trash-level">Trash Level: percent%</p>
+        <p id="warning-message" class="warning-message"></p>
+    </div>
+
+    <script>
+        // JavaScript code to display a warning message when the progress is >= 90%
+        const progress = document.querySelector('.progress');
+        const warningMessage = document.getElementById('warning-message');
+        var distanceValue = {{ trash_can.distancemeasurement_set.last.distance }};
+        var percent = 0;
+        if (distanceValue >=35){
+            percent = 0;
+        }
+        else if (distanceValue < 35 && distanceValue > 10){
+            percent = 50;
+        }
+        else if (distanceValue <= 10){
+            percent = 90;
+        }
+
+
+
+        // Update the progress bar
+        document.getElementById('progress-bar').style.width = percent + '%';
+
+        // Update the "Trash Level" paragraph
+        document.getElementById('trash-level').innerText = 'Trash Level: ' + percent + '%';
+        if (parseInt(progress.style.width) >= 90) {
+            warningMessage.textContent = "I didn't know leaving the trash was a new form of modern art. Very avant-garde.";
+        }
+
+
+    </script>
+            {% if trash_can.distancemeasurement_set.last %}
                     <tr>
                         <td>{{ trash_can.distancemeasurement_set.last.distance }}</td>
                         <td>{{ trash_can.distancemeasurement_set.last.created_at }}</td>
@@ -32,7 +124,9 @@
                     </tr>
                 {% endif %}
             </tbody>
-        </table>
+    
+    </table>
     {% endfor %}
+
 </body>
 </html>
