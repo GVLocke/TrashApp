@@ -1,0 +1,26 @@
+<!-- mainpage.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Page</title>
+</head>
+<body>
+    <h1>Distance Measurements</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Distance</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for measurement in latest_measurements %}
+                <tr>
+                    <td>{{ measurement.distance }}</td>
+                    <td>{{ measurement.timestamp }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
