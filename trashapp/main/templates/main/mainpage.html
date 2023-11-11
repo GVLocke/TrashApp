@@ -10,7 +10,7 @@
             padding: 0;
             background-color: #f0f0f0;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             height: 100vh;
         }
@@ -58,12 +58,24 @@
     </style>
 </head>
 <body>
-    <h1>Latest Distance Measurements</h1>
+    <h1>Trash App</h1>
     <form action="{% url 'create_trash_can' %}" method="post">
         {% csrf_token %}
         <input type="text" name="name" placeholder="Enter trash can name">
         <input type="submit" value="Create Trash Can">
+        <!--<input type="submit" value="Delete Trash Can"> -->
     </form>
+    {% for trash_can in trash_cans %}
+        <div>
+            <p>{{ trash_can.name }}</p>
+            <!-- Form for deleting a trash can -->
+            <form action="{% url 'delete_trash_can' trash_can.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="trash_can_id" value="{{ trash_can.id }}">
+                <input type="submit" value="Delete">
+            </form>
+        </div>
+    {% endfor %}
     {% for trash_can in trash_cans %}
         <h2>{{ trash_can.name }}</h2>
         <table>
