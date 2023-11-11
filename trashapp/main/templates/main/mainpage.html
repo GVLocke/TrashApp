@@ -5,7 +5,7 @@
     <title>Main Page</title>
 </head>
 <body>
-    <h1>Distance Measurements</h1>
+    <h1>Latest Distance Measurement</h1>
     <table>
         <thead>
             <tr>
@@ -14,12 +14,16 @@
             </tr>
         </thead>
         <tbody>
-            {% for measurement in latest_measurements %}
+            {% if latest_measurement %}
                 <tr>
-                    <td>{{ measurement.distance }}</td>
-                    <td>{{ measurement.timestamp }}</td>
+                    <td>{{ latest_measurement.distance }}</td>
+                    <td>{{ latest_measurement.created_at }}</td>
                 </tr>
-            {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">No measurements available</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </body>
