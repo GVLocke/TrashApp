@@ -97,33 +97,39 @@
     </div>
 
     <script>
-        // JavaScript code to display a warning message when the progress is >= 90%
-        const progress = document.querySelector('.progress');
-        const warningMessage = document.getElementById('warning-message');
-        var distanceValue = {{ trash_can.distancemeasurement_set.last.distance }};
-        var percent = 0;
-        if (distanceValue >=35){
-            percent = 0;
+        // function to fetch new data and update the progress bar
+        var trash_can_name = "{{ trash_can.name }}";
+        function fetchAndUpdatePage() {
+            fetch('/api/get-latest-distance/' + trash_can_name)
+            .then(response => response.json())
+            .then(data => {
+                //calculate the percentage
+                var distanceValue = data.latest_distance;
+                let maxDistance = 35;
+                let percent = Math.round((maxDistance - distanceValue) / maxDistance * 100);
+                if (percent < 0) {
+                    percent = 0;
+                } else if (percent > 100) {
+                    percent = 100;
+                }
+                
+                // Update the progress bar
+                const progressBar = document.getElementById('progress-bar');
+                progressBar.style.width = percent + '%';
+
+                // JavaScript code to display a warning message when the progress is >= 90%
+                const warningMessage = document.getElementById('warning-message');
+
+                // Update the "Trash Level" paragraph
+                document.getElementById('trash-level').innerText = 'Trash Level: ' + percent + '%';
+                if (parseInt(progressBar.style.width) >= 90) {
+                    warningMessage.textContent = "I didn't know leaving the trash was a new form of modern art. Very avant-garde.";
+                } else {
+                    warningMessage.textContent = "";
+                }
+            });
         }
-        else if (distanceValue < 35 && distanceValue > 10){
-            percent = 50;
-        }
-        else if (distanceValue <= 10){
-            percent = 90;
-        }
-
-
-
-        // Update the progress bar
-        document.getElementById('progress-bar').style.width = percent + '%';
-
-        // Update the "Trash Level" paragraph
-        document.getElementById('trash-level').innerText = 'Trash Level: ' + percent + '%';
-        if (parseInt(progress.style.width) >= 90) {
-            warningMessage.textContent = "I didn't know leaving the trash was a new form of modern art. Very avant-garde.";
-        }
-
-
+        setInterval(fetchAndUpdatePage, 5000);
     </script>
             {% if trash_can.distancemeasurement_set.last %}
                     <tr>

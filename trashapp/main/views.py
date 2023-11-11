@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import resolve
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import DistanceMeasurement, TrashCan
 
@@ -47,6 +47,23 @@ def receive_distance_data(request):
 
     DistanceMeasurement.objects.create(distance=distance, trash_can=trash_can)
     return JsonResponse({'status': 'Success'})
+
+@require_GET
+def get_lastest_distance(request, trash_can_name):
+    if trash_can_name is None:
+        return JsonResponse({'error': 'Missing trash_can in request'}, status=400)
+
+    try:
+        trash_can = TrashCan.objects.get(name=trash_can_name)
+    except TrashCan.DoesNotExist:
+        return JsonResponse({'error': 'Trash can does not exist'}, status=400)
+
+    try:
+        distance_measurement = DistanceMeasurement.objects.filter(trash_can=trash_can).latest('created_at')
+    except DistanceMeasurement.DoesNotExist:
+        return JsonResponse({'error': 'No distance measurements for this trash can'}, status=400)
+
+    return JsonResponse({'latest_distance': distance_measurement.distance})
 
 def main_page(request):
     trash_cans = TrashCan.objects.all()
