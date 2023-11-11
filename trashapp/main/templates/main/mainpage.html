@@ -5,36 +5,52 @@
     <title>Main Page</title>
     <style>
         body {
-            font-family: 'Georgia', serif; /* Change the font-family to Georgia */
+            font-family: 'Georgia', serif;
             margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
+            padding: 20px;
             height: 100vh;
+            background-color: #f0f0f0;
+        }
+        header{
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 40px;
+            justify-items: center;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+        }
+
+        .grid-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .container {
-            text-align: center;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        h1 {
-            font-family: Courier New, monospace;
-            color: #333;
-        }
-
         .progress-bar {
-            width: 100%;
+            width: 80%; /* Adjust this value as needed */
             height: 20px;
             background-color: #eee;
             border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
+            margin: 20px auto; /* Centers the progress bar horizontally */
         }
 
         .progress {
@@ -44,107 +60,72 @@
             transition: width 0.5s ease;
         }
 
-        .trash-can-icon {
-            font-size: 48px;
-            color: #333;
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        /* New style for the warning message */
-        .warning-message {
-            color: #ff0000; /* Red color for warning */
-            font-weight: bold;
-            margin-top: 10px;
-        }
+        /* rest of your CSS */
     </style>
 </head>
 <body>
-    <h1>Trash App</h1>
-    <form action="{% url 'create_trash_can' %}" method="post">
-        {% csrf_token %}
-        <input type="text" name="name" placeholder="Enter trash can name">
-        <input type="submit" value="Create Trash Can">
-        <!--<input type="submit" value="Delete Trash Can"> -->
-    </form>
-    {% for trash_can in trash_cans %}
-        <div>
-            <p>{{ trash_can.name }}</p>
-            <!-- Form for deleting a trash can -->
-            <form action="{% url 'delete_trash_can' trash_can.id %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="trash_can_id" value="{{ trash_can.id }}">
-                <input type="submit" value="Delete">
-            </form>
-        </div>
-    {% endfor %}
-    {% for trash_can in trash_cans %}
-        <h2>{{ trash_can.name }}</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Distance</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody>
-                <div class="container">
-        <h1>Trash Can Monitor</h1>
-        <i class="trash-can-icon">&#128465;</i>
-        <div class="progress-bar">
-            <div class="progress" id ="progress-bar" style="width: percent%;"></div>
-        </div>
-        <p id = "trash-level">Trash Level: percent%</p>
-        <p id="warning-message" class="warning-message"></p>
+    <div class="center-content">
+        <h1>Trash App</h1>
+        <form action="{% url 'create_trash_can' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Enter trash can name">
+            <input type="submit" value="Create Trash Can">
+        </form>
     </div>
-
-    <script>
-        // function to fetch new data and update the progress bar
-        var trash_can_name = "{{ trash_can.name }}";
-        function fetchAndUpdatePage() {
-            fetch('/api/get-latest-distance/' + trash_can_name)
-            .then(response => response.json())
-            .then(data => {
-                //calculate the percentage
-                var distanceValue = data.latest_distance;
-                let maxDistance = 35;
-                let percent = Math.round((maxDistance - distanceValue) / maxDistance * 100);
-                if (percent < 0) {
-                    percent = 0;
-                } else if (percent > 100) {
-                    percent = 100;
+    <div class="grid-container">
+        {% for trash_can in trash_cans %}
+            <div class="grid-item">
+                <h2>{{ trash_can.name }}</h2>
+                <div class="container">
+                    <i class="trash-can-icon">&#128465;</i>
+                    <div class="progress-bar">
+                        <div class="progress" id ="progress-bar" style="width: percent%;"></div>
+                    </div>
+                    <p id = "trash-level">Trash Level: percent%</p>
+                    <p id="warning-message" class="warning-message"></p>
+                    <!-- Form for deleting a trash can -->
+                    <form action="{% url 'delete_trash_can' trash_can.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="trash_can_id" value="{{ trash_can.id }}">
+                        <input type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
+            <script>
+                // function to fetch new data and update the progress bar
+                var trash_can_name = "{{ trash_can.name }}";
+                function fetchAndUpdatePage() {
+                    fetch('/api/get-latest-distance/' + trash_can_name)
+                    .then(response => response.json())
+                    .then(data => {
+                        //calculate the percentage
+                        var distanceValue = data.latest_distance;
+                        let maxDistance = 30;
+                        let percent = Math.round((maxDistance - distanceValue) / maxDistance * 100);
+                        let scale = 1.4; // Adjust this value as needed
+                        percent = Math.round(percent * scale);
+                        if (percent < 0) {
+                            percent = 0;
+                        } else if (percent > 100) {
+                            percent = 100;
+                        }
+                        
+                        // Update the progress bar
+                        const progressBar = document.getElementById('progress-bar');
+                        progressBar.style.width = percent + '%';
+        
+                        // Update the "Trash Level" paragraph
+                        document.getElementById('trash-level').innerText = 'Trash Level: ' + percent + '%';
+                    });
                 }
-                
-                // Update the progress bar
-                const progressBar = document.getElementById('progress-bar');
-                progressBar.style.width = percent + '%';
-
-                // JavaScript code to display a warning message when the progress is >= 90%
-                const warningMessage = document.getElementById('warning-message');
-
-                // Update the "Trash Level" paragraph
-                document.getElementById('trash-level').innerText = 'Trash Level: ' + percent + '%';
-                if (parseInt(progressBar.style.width) >= 90) {
-                    warningMessage.textContent = "I didn't know leaving the trash was a new form of modern art. Very avant-garde.";
-                } else {
-                    warningMessage.textContent = "";
-                }
-            });
-        }
-        setInterval(fetchAndUpdatePage, 5000);
-    </script>
-            {% if trash_can.distancemeasurement_set.last %}
-                    <tr>
-                        <td>{{ trash_can.distancemeasurement_set.last.distance }}</td>
-                        <td>{{ trash_can.distancemeasurement_set.last.created_at }}</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="2">No measurements available</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-    
-    </table>
-    {% endfor %}
-
+                setInterval(fetchAndUpdatePage, 2500);
+            </script>
+        {% endfor %}
+    </div>
 </body>
 </html>
