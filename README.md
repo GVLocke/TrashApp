@@ -29,3 +29,6 @@ To build this web server locally, follow these instructions:
 If you wish to send serial data to the server, use the program located at `/trashapp/arduino-data-getter/main.py.` Ensure that you change the name of the trash can in the HTTP post to one that exists in your database. Also, confirm that the `Serial` object `ser` is configured with the correct baud rate and port corresponding to your Arduino.
 
 While the server might accept properly formatted posts directly from your board if your Arduino has Wi-Fi capabilities, this feature has not been thoroughly tested.
+
+## Shoutouts
+Thanks to team members [Mason](https://github.com/masoncary26), [Baker](https://github.com/baker0204), and Daniel Powell
