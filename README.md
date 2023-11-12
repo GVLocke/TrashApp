@@ -1,6 +1,6 @@
 # TrashApp
 
-**2nd Place Finisher at a Fall 2023 J.B. Hunt Hackathon.** This project involves a smart trash can. The Django web server accepts incoming serial data from an Arduino with an HC-SR04 Ultrasonic Sensor and displays the data as a progress bar, indicating how full the trash can is. The functionality is beneficial for homeowners, particularly those with large homes and/or many children. Additionally, it proves useful for businesses such as restaurants, allowing bussers to check a computer screen and see the fill levels of all the trash cans in the restaurant.
+**2nd Place Finisher at a Fall 2023 J.B. Hunt Hackathon.** This project involves a smart trash can. The Django web server accepts incoming serial data from an Arduino (my team used an Uno) with an HC-SR04 Ultrasonic Sensor ([something like this](https://www.amazon.com/WWZMDiB-HC-SR04-Ultrasonic-Distance-Measuring/dp/B0B1MJJLJP?keywords=hc+sr04&qid=1699813868&sr=8-5)) and displays the data as a progress bar, indicating how full the trash can is. The functionality is beneficial for homeowners, particularly those with large homes and/or many children. Additionally, it proves useful for businesses such as restaurants, allowing bussers to check a computer screen and see the fill levels of all the trash cans in the restaurant.
 
 ## Building
 To build this web server locally, follow these instructions:
