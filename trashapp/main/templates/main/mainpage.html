@@ -9,12 +9,13 @@
             margin: 0;
             padding: 20px;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #D8DEE9;
         }
         header{
-            background-color: #f4f4f4;
+            background-color: #D8DEE9;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #2E3440
         }
 
         .grid-container {
@@ -40,7 +41,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: #fff;
+            background-color: #ECEFF4;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -55,7 +56,7 @@
 
         .progress {
             height: 100%;
-            background-color: #4caf50;
+            background-color: #A3BE8C;
             border-radius: 10px;
             transition: width 0.5s ease;
         }
@@ -100,14 +101,14 @@
                 // function to fetch new data and update the progress bar
                 var trash_can_name = "{{ trash_can.name }}";
                 function fetchAndUpdatePage() {
-                    fetch('/api/get-latest-distance/' + trash_can_name)
+                    fetch('/api/get-latest-distance/' + encodeURIComponent(trash_can_name))                    
                     .then(response => response.json())
                     .then(data => {
                         //calculate the percentage
                         var distanceValue = data.latest_distance;
                         let maxDistance = 30;
                         let percent = Math.round((maxDistance - distanceValue) / maxDistance * 100);
-                        let scale = 1.4; // Adjust this value as needed
+                        let scale = 1.2; // Adjust this value as needed
                         percent = Math.round(percent * scale);
                         if (percent < 0) {
                             percent = 0;
@@ -123,7 +124,7 @@
                         document.getElementById('trash-level').innerText = 'Trash Level: ' + percent + '%';
                     });
                 }
-                setInterval(fetchAndUpdatePage, 2500);
+                setInterval(fetchAndUpdatePage, 4000);
             </script>
         {% endfor %}
     </div>
