@@ -31,4 +31,4 @@ If you wish to send serial data to the server, use the program located at `/tras
 While the server might accept properly formatted posts directly from your board if your Arduino has Wi-Fi capabilities, this feature has not been thoroughly tested.
 
 ## Shoutouts
-Thanks to team members [Mason](https://github.com/masoncary26), [Baker](https://github.com/baker0204), and Daniel Powell
+Thanks to team members [Mason](https://github.com/masoncary26), [Baker](https://github.com/baker0204), and Daniel Powell.
